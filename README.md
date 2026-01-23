@@ -18,3 +18,7 @@ MaistorHub connects customers with craftsmen such as plumbers, electricians, bui
 - Database: PostgreSQL / MySQL
 - Authentication: JWT
 
+## Getting Started
+```bash
+git clone https://github.com/your-username/maistorhub.git
+cd maistorhub
