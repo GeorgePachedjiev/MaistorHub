@@ -12,3 +12,9 @@ MaistorHub connects customers with craftsmen such as plumbers, electricians, bui
 - Ratings and reviews
 - User authentication (customers & craftsmen)
 
+## Tech Stack (example)
+- Frontend: React / Next.js
+- Backend: Node.js + Express
+- Database: PostgreSQL / MySQL
+- Authentication: JWT
+
