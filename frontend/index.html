@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaistorHub - Намери майстор в Смолян</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🔧</span>
+                    <span class="logo-text">MaistorHub</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-link active">Начало</a>
+                    <a href="masters.html" class="nav-link">Майстори</a>
+                    <a href="login.html" class="nav-link">Вход</a>
+                    <a href="register.html" class="nav-link btn-nav">Регистрация</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Намери най-добрия майстор в Смолян</h1>
+                    <p class="hero-subtitle">Свържи се с опитни професионалисти за всякакъв вид услуги</p>
+                    <a href="#search" class="btn btn-primary btn-large">Започни търсене</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section id="search" class="search-section">
+            <div class="container">
+                <div class="search-card">
+                    <h2 class="section-title">Търси майстор</h2>
+                    <p class="section-subtitle">Попълни критериите по-долу, за да намериш подходящ майстор</p>
+                    <form id="searchForm" class="search-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city" class="form-label">Град</label>
+                                <input type="text" id="city" name="city" class="form-input" placeholder="напр. Смолян">
+                            </div>
+                            <div class="form-group">
+                                <label for="services" class="form-label">Услуга</label>
+                                <input type="text" id="services" name="services" class="form-input" placeholder="напр. Водопровод, Отопление">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <span>Търси майстори</span>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1C4.58172 1 1 4.58172 1 9C1 13.4183 4.58172 17 9 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M19 19L14.65 14.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="results-section" style="display: none;">
+            <div class="container">
+                <div class="results-header">
+                    <h2 class="section-title">Намерени майстори</h2>
+                    <p class="results-count" id="resultsCount"></p>
+                </div>
+                <div id="resultsContainer" class="masters-grid"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-icon">🔧</span>
+                    <span class="logo-text">MaistorHub</span>
+                </div>
+                <p class="footer-text">&copy; 2024 MaistorHub. Локален marketplace за майстори в Смолян.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification"></div>
+
+    <script src="main.js"></script>
+    <script>
+        // Smooth scroll to search
+        document.querySelector('a[href="#search"]')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Handle search form submission
+        document.getElementById('searchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const city = document.getElementById('city').value.trim();
+            const services = document.getElementById('services').value.trim();
+            
+            showNotification('Търсене...', 'info');
+            
+            const masters = await searchMasters(city || undefined, services || undefined);
+            
+            if (masters && masters.length > 0) {
+                displayMasters(masters, 'resultsContainer');
+                document.getElementById('resultsCount').textContent = `Намерени ${masters.length} майстори`;
+                document.getElementById('resultsSection').style.display = 'block';
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+                showNotification(`Намерени ${masters.length} майстори`, 'success');
+            } else {
+                showNotification('Няма намерени майстори с тези критерии', 'error');
+                document.getElementById('resultsSection').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
