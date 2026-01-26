@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - MaistorHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🔧</span>
+                    <span class="logo-text">MaistorHub</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-link">Начало</a>
+                    <a href="masters.html" class="nav-link">Майстори</a>
+                    <a href="login.html" class="nav-link">Вход</a>
+                    <a href="register.html" class="nav-link btn-nav active">Регистрация</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="auth-main">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h1 class="auth-title">Регистрация на майстор</h1>
+                        <p class="auth-subtitle">Създай своя профил и започни да получаваш заявки</p>
+                    </div>
+
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Име <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" class="form-input" required placeholder="Иван Петров">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" class="form-input" required placeholder="ivan@example.com">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Телефон</label>
+                                <input type="tel" id="phone" name="phone" class="form-input" placeholder="0888123456">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="city" class="form-label">Град</label>
+                                <input type="text" id="city" name="city" class="form-input" placeholder="Смолян">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password" class="form-label">Парола <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" class="form-input" required minlength="6" placeholder="Минимум 6 символа">
+                            <small class="form-hint">Паролата трябва да бъде поне 6 символа</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="services" class="form-label">Услуги</label>
+                            <textarea id="services" name="services" class="form-input form-textarea" rows="3" placeholder="напр. Водопровод, Отопление, Електричество"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="price_range" class="form-label">Ценова категория</label>
+                            <input type="text" id="price_range" name="price_range" class="form-input" placeholder="напр. 50-100 лв">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block btn-large">
+                            <span>Регистрирай се</span>
+                        </button>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <p>Вече имаш акаунт? <a href="login.html" class="auth-link">Влез тук</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-icon">🔧</span>
+                    <span class="logo-text">MaistorHub</span>
+                </div>
+                <p class="footer-text">&copy; 2024 MaistorHub. Локален marketplace за майстори в Смолян.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification"></div>
+
+    <script src="main.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                password: document.getElementById('password').value,
+                services: document.getElementById('services').value,
+                price_range: document.getElementById('price_range').value,
+                city: document.getElementById('city').value
+            };
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Регистриране...</span>';
+            
+            const result = await registerMaster(formData);
+            
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>Регистрирай се</span>';
+            
+            if (result.success) {
+                showNotification('Успешна регистрация! Пренасочване...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            } else {
+                showNotification(result.error || 'Възникна грешка при регистрацията', 'error');
+            }
+        });
+    </script>
+</body>
+</html>
