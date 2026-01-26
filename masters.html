@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Всички майстори - MaistorHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🔧</span>
+                    <span class="logo-text">MaistorHub</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-link">Начало</a>
+                    <a href="masters.html" class="nav-link active">Майстори</a>
+                    <a href="login.html" class="nav-link">Вход</a>
+                    <a href="register.html" class="nav-link btn-nav">Регистрация</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-hero">
+            <div class="container">
+                <h1 class="page-title">Всички майстори</h1>
+                <p class="page-subtitle">Прегледай всички регистрирани майстори в системата</p>
+            </div>
+        </section>
+
+        <section class="filter-section">
+            <div class="container">
+                <div class="filter-card">
+                    <h2 class="filter-title">Филтрирай резултатите</h2>
+                    <form id="filterForm" class="filter-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="filterCity" class="form-label">Град</label>
+                                <input type="text" id="filterCity" name="city" class="form-input" placeholder="напр. Смолян">
+                            </div>
+                            <div class="form-group">
+                                <label for="filterServices" class="form-label">Услуга</label>
+                                <input type="text" id="filterServices" name="services" class="form-input" placeholder="напр. Водопровод">
+                            </div>
+                        </div>
+                        <div class="filter-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <span>Приложи филтри</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="loadAllMasters()">
+                                <span>Изчисти</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="masters-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Майстори</h2>
+                    <p class="results-count" id="resultsCount">Зареждане...</p>
+                </div>
+                <div id="mastersContainer" class="masters-grid">
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Зареждане на майстори...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-icon">🔧</span>
+                    <span class="logo-text">MaistorHub</span>
+                </div>
+                <p class="footer-text">&copy; 2024 MaistorHub. Локален marketplace за майстори в Смолян.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification"></div>
+
+    <script src="main.js"></script>
+    <script>
+        // Load all masters on page load
+        async function loadAllMasters() {
+            document.getElementById('filterCity').value = '';
+            document.getElementById('filterServices').value = '';
+            
+            document.getElementById('mastersContainer').innerHTML = `
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Зареждане...</p>
+                </div>
+            `;
+            
+            const masters = await searchMasters();
+            displayMasters(masters, 'mastersContainer');
+            document.getElementById('resultsCount').textContent = `${masters.length} майстори`;
+        }
+
+        // Handle filter form submission
+        document.getElementById('filterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const city = document.getElementById('filterCity').value.trim();
+            const services = document.getElementById('filterServices').value.trim();
+            
+            document.getElementById('mastersContainer').innerHTML = `
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Търсене...</p>
+                </div>
+            `;
+            
+            const masters = await searchMasters(city || undefined, services || undefined);
+            displayMasters(masters, 'mastersContainer');
+            document.getElementById('resultsCount').textContent = `${masters.length} майстори`;
+        });
+
+        // Load masters on page load
+        loadAllMasters();
+    </script>
+</body>
+</html>
